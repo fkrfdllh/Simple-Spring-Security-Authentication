@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
+    /**
+     * UserRepository for manage MongoDB data
+     */
     @Autowired
     private UserRepository userRepository;
 
@@ -23,6 +26,9 @@ public class AuthController {
 
     @PostMapping("/subs")
     private ResponseEntity<?> subscribeClient(@RequestBody AuthenticationRequest authenticationRequest) {
+        /*
+          AuthenticationRequest for get request data
+          */
         String username = authenticationRequest.getUsername();
         String password = authenticationRequest.getPassword();
 
