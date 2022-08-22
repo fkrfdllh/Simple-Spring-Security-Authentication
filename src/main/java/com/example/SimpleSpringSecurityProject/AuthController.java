@@ -4,10 +4,13 @@ import com.example.SimpleSpringSecurityProject.models.AuthenticationRequest;
 import com.example.SimpleSpringSecurityProject.models.AuthenticationResponse;
 import com.example.SimpleSpringSecurityProject.models.UserModel;
 import com.example.SimpleSpringSecurityProject.models.UserRepository;
+import com.example.SimpleSpringSecurityProject.services.JwtUtils;
+import com.example.SimpleSpringSecurityProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,12 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @PostMapping("/auth")
     private ResponseEntity<?> authenticateClient(@RequestBody AuthenticationRequest authenticationRequest) {
         String username = authenticationRequest.getUsername();
@@ -32,7 +41,11 @@ public class AuthController {
             return ResponseEntity.ok(new AuthenticationResponse("Error during client authentication: " + ex.getMessage()));
         }
 
-        return ResponseEntity.ok(new AuthenticationResponse("Client authenticated: " + username));
+        UserDetails loadedUser =  userService.loadUserByUsername(username);
+
+        String generatedToken = jwtUtils.generateToken(loadedUser);
+
+        return ResponseEntity.ok(new AuthenticationResponse(generatedToken));
     }
 
     @PostMapping("/subs")
