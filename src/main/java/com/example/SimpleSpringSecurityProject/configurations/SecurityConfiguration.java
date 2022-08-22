@@ -1,5 +1,6 @@
 package com.example.SimpleSpringSecurityProject.configurations;
 
+import com.example.SimpleSpringSecurityProject.services.JwtFilterRequest;
 import com.example.SimpleSpringSecurityProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtFilterRequest jwtFilterRequest;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
