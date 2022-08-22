@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
-    /**
-     * UserRepository for manage MongoDB data
-     */
+
     @Autowired
     private UserRepository userRepository;
 
@@ -31,8 +29,8 @@ public class AuthController {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.ok(new AuthenticationResponse("Error during client authentication"));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new AuthenticationResponse("Error during client authentication: " + ex.getMessage()));
         }
 
         return ResponseEntity.ok(new AuthenticationResponse("Client authenticated: " + username));
@@ -40,9 +38,7 @@ public class AuthController {
 
     @PostMapping("/subs")
     private ResponseEntity<?> subscribeClient(@RequestBody AuthenticationRequest authenticationRequest) {
-        /*
-          AuthenticationRequest for get request data
-          */
+
         String username = authenticationRequest.getUsername();
         String password = authenticationRequest.getPassword();
 
@@ -56,6 +52,6 @@ public class AuthController {
             return ResponseEntity.ok(new AuthenticationResponse("Subscribe Success for client: " + username));
         }
 
-        return ResponseEntity.ok(new AuthenticationResponse("Subscribe Success for client: " + username));
+        return ResponseEntity.ok(new AuthenticationResponse("Subscribe Success for client: " + username + " with password '" + password + "'"));
     }
 }
