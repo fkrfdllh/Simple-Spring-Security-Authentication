@@ -30,8 +30,12 @@ public class AuthController {
         userModel.setUsername(username);
         userModel.setPassword(password);
 
-        userRepository.save(userModel);
+        try {
+            userRepository.save(userModel);
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new AuthenticationResponse("Subscribe Success for client: " + username));
+        }
 
-        return ResponseEntity.ok(new AuthenticationResponse());
+        return ResponseEntity.ok(new AuthenticationResponse("Subscribe Success for client: " + username));
     }
 }
